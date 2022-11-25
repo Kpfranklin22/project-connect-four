@@ -180,6 +180,57 @@ const clearColorfromTop = (colIndex) => {
   topCell.classList.remove("yellow");
   topCell.classList.remove("red");
 };
+
+const getColorOfCell = (cell) => {
+  const classList = getClassListArray(cell);
+  if (classList.includes("yellow")) return "yellow";
+  if (classList.includes("red")) return "red";
+  return null;
+};
+
+const checkWinningCells = (cells) => {
+if (cells.length < 4) return;
+        gameIsLive = false;
+        for (const cell of cells) {
+            cell.classList.add('win');
+    }
+    statusSpan.textContent = `${yellowisNext ? 'Yellow' : 'Red'} has won!`
+};
+
+const checkStatusOfGame = (cell) => {
+  const color = getColorOfCell(cell);
+  const [rowIndex, colIndex] = getCellLocation(cell);
+
+  if (!color) return;
+
+  // check horizontally
+  let winningCells = [cell];
+  let rowtoCheck = rowIndex;
+  let coltoCheck = colIndex - 1;
+  while (coltoCheck > 0) {
+    const cellToCheck = rows[rowtoCheck][coltoCheck];
+    if (getColorOfCell(cellToCheck) === color) {
+      winningCells.push(cellToCheck);
+      coltoCheck--;
+    } else {
+      break;
+    }
+  }
+  coltoCheck = colIndex +1; 
+  while (coltoCheck <= 6) {
+    const cellToCheck = rows[rowtoCheck][coltoCheck];
+    if (getColorOfCell(cellToCheck) === color) {
+      winningCells.push(cellToCheck);
+      coltoCheck++;
+    } else {
+      break;
+    }
+  }
+
+checkWinningCells(winningCells);
+
+};
+
 // Event handlers
 
 const handleCellMouseOver = (e) => {
@@ -212,12 +263,12 @@ const handleCellClick = (e) => {
   if (!openCell) return;
 
   openCell.classList.add(yellowIsNext ? "yellow" : "red");
-  // TODO: Check the status of the game
+  checkStatusOfGame(openCell);
 
   yellowIsNext = !yellowIsNext;
   clearColorfromTop(colIndex);
   const topCell = topCells[colIndex];
-  topCell.classList.add(yellowIsNext ? 'yellow' : 'red');
+  topCell.classList.add(yellowIsNext ? "yellow" : "red");
 };
 
 // Adding Event Listeners
