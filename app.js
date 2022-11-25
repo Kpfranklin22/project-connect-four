@@ -63,21 +63,28 @@ return [rowNumber, colNumber];
 
 const handleCellMouseOver = (e) => {
 const cell = e.target;
-
 const [rowIndex, colIndex] = getCellLocation(cell);
-
 
 const topCell = topCells[colIndex];
 topCell.classList.add(yellowIsNext ? 'yellow': 'red');
-
-if (yellowIsNext) {
-    topCell.classList.add('yellow');
-} else {
-    topCell.classList.add('red');
-}
+// ^ this is shorthand for the commented out code below
+//
+// if (yellowIsNext) {
+//     topCell.classList.add('yellow');
+// } else {
+//     topCell.classList.add('red');
+// }
 };
 
 
+const handleCellMouseOut = (e) => {
+    const cell = e.target;
+    const [rowIndex, colIndex] = getCellLocation(cell);
+
+    const topCell = topCells[colIndex];
+    topCell.classList.remove('yellow');
+    topCell.classList.remove('red');
+};
 
 
 // Adding Event Listeners
@@ -85,5 +92,6 @@ if (yellowIsNext) {
 for (const row of rows) {
    for(const cell of row) {
    cell.addEventListener('mouseover', handleCellMouseOver);
+   cell.addEventListener('mouseout', handleCellMouseOut);
 }
 };
